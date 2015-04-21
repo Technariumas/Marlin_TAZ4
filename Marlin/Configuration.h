@@ -222,10 +222,16 @@
 #define MAX_BED_POWER 206 // limits duty cycle to bed; 255=full current
 
 #ifdef PIDTEMPBED
+
+// Autotuned
+    #define  DEFAULT_bedKp 207.79
+    #define  DEFAULT_bedKi 25.16
+    #define  DEFAULT_bedKd 428.96
+
 //24V 360W silicone heater from NPH on 3mm borosilicate (TAZ 2.2+)
-    #define  DEFAULT_bedKp 20
-    #define  DEFAULT_bedKi 5
-    #define  DEFAULT_bedKd 275
+//    #define  DEFAULT_bedKp 20
+//    #define  DEFAULT_bedKi 5
+//    #define  DEFAULT_bedKd 275
 
 //12v 400W silicone heater from QUDB into 3mm borosilicate (TAZ 1.0+)
 //from pidautotune
