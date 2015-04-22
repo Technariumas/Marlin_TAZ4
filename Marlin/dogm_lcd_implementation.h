@@ -127,8 +127,8 @@ static void lcd_implementation_init()
 	do {
 			// RepRap init bmp
 			//u8g.drawBitmapP(0,0,START_BMPBYTEWIDTH,START_BMPHEIGHT,start_bmp);
-			// LulzBot init bmp
-			u8g.drawBitmapP(0,0,LULZBOT_BMPBYTEWIDTH,LULZBOT_BMPHEIGHT,lulzbot_bmp);
+			// Technarium init bmp
+			u8g.drawBitmapP(0,0,TECHNARIUM_BMPBYTEWIDTH,TECHNARIUM_BMPHEIGHT,technarium_bmp);
 			// Welcome message
 			u8g.setFont(u8g_font_10x20);
 			u8g.drawStr(61,17,"TAZ");
@@ -140,7 +140,7 @@ static void lcd_implementation_init()
 			u8g.drawStr(63,41,"LulzBot.com");
 			u8g.setFont(u8g_font_5x8);
 			u8g.drawStr(63,53,"Firmware:");
-			u8g.drawStr(63,62,"Marlin 2014Q3");
+			u8g.drawStr(63,62,"Marlin 2014Q3+");
 	   } while( u8g.nextPage() );
 delay(3000);
 }
