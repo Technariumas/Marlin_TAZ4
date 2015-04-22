@@ -140,7 +140,7 @@ static void lcd_implementation_init()
 			u8g.drawStr(63,41,"LulzBot.com");
 			u8g.setFont(u8g_font_5x8);
 			u8g.drawStr(63,53,"Firmware:");
-			u8g.drawStr(63,62,"Marlin 2014Q3+");
+			u8g.drawStr(63,62,"Marlin 2014Q3");
 	   } while( u8g.nextPage() );
 }
 
@@ -201,7 +201,7 @@ static void lcd_implementation_status_screen()
 			// do nothing
 		 }
  
- u8g.setPrintPos(65,47);
+ u8g.setPrintPos(66,47);
  if(starttime != 0)
     {
         uint16_t time = millis()/60000 - starttime/60000;
