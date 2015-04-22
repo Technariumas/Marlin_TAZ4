@@ -173,11 +173,17 @@
   #define K1 0.96 //smoothing factor within the PID
   #define PID_dT ((OVERSAMPLENR * 8.0)/(F_CPU / 64.0 / 256.0)) //sampling period of the temperature routine
 
+
+// Autotuned
+    #define  DEFAULT_Kp 5.13
+    #define  DEFAULT_Ki .29
+    #define  DEFAULT_Kd 22.88
+
 // If you are using a preconfigured hotend then you can use one of the value sets by uncommenting it
 // Buda 2.0 on 24V
-    #define  DEFAULT_Kp 6
-    #define  DEFAULT_Ki .3
-    #define  DEFAULT_Kd 125
+//    #define  DEFAULT_Kp 6
+//    #define  DEFAULT_Ki .3
+//    #define  DEFAULT_Kd 125
 
 // Buda 2.0 on 12V
 //    #define  DEFAULT_Kp 22.2
