@@ -142,7 +142,6 @@ static void lcd_implementation_init()
 			u8g.drawStr(63,53,"Firmware:");
 			u8g.drawStr(63,62,"Marlin 2014Q3+");
 	   } while( u8g.nextPage() );
-delay(3000);
 }
 
 static void lcd_implementation_clear()
