@@ -1903,96 +1903,100 @@ void process_commands()
       setWatch();
       codenum = millis();
 
-      /* See if we are heating up or cooling down */
-      target_direction = isHeatingHotend(tmp_extruder); // true if heating, false if cooling
-
-      #ifdef TEMP_RESIDENCY_TIME
-        long residencyStart;
-        residencyStart = -1;
-        /* continue to loop until we have reached the target temp
-          _and_ until TEMP_RESIDENCY_TIME hasn't passed since we reached it */
-        while((residencyStart == -1) ||
+      long residencyStart;
+      residencyStart = -1;
+      /* continue to loop until we have reached the target temp
+         _and_ until TEMP_RESIDENCY_TIME hasn't passed since we reached it */
+      while((residencyStart == -1) ||
               (residencyStart >= 0 && (((unsigned int) (millis() - residencyStart)) < (TEMP_RESIDENCY_TIME * 1000UL))) ) {
-      #else
-        while ( target_direction ? (isHeatingHotend(tmp_extruder)) : (isCoolingHotend(tmp_extruder)&&(CooldownNoWait==false)) ) {
-      #endif //TEMP_RESIDENCY_TIME
-          if( (millis() - codenum) > 1000UL )
-          { //Print Temp Reading and remaining time every 1 second while heating up/cooling down
-            SERIAL_PROTOCOLPGM("T:");
-            SERIAL_PROTOCOL_F(degHotend(tmp_extruder),1);
-            SERIAL_PROTOCOLPGM(" E:");
-            SERIAL_PROTOCOL((int)tmp_extruder);
-            #ifdef TEMP_RESIDENCY_TIME
+          if( (millis() - codenum) > 1000UL ) {
+              //Print Temp Reading and remaining time every 1 second while heating up/cooling down
+              SERIAL_PROTOCOLPGM("T:");
+              SERIAL_PROTOCOL_F(degHotend(tmp_extruder),1);
+              SERIAL_PROTOCOLPGM(" E:");
+              SERIAL_PROTOCOL((int)tmp_extruder);
               SERIAL_PROTOCOLPGM(" W:");
-              if(residencyStart > -1)
-              {
-                 codenum = ((TEMP_RESIDENCY_TIME * 1000UL) - (millis() - residencyStart)) / 1000UL;
-                 SERIAL_PROTOCOLLN( codenum );
+              if(residencyStart > -1) {
+                  codenum = ((TEMP_RESIDENCY_TIME * 1000UL) - (millis() - residencyStart)) / 1000UL;
+                  SERIAL_PROTOCOLLN( codenum );
+              } else {
+                  SERIAL_PROTOCOLLN( "?" );
               }
-              else
-              {
-                 SERIAL_PROTOCOLLN( "?" );
-              }
-            #else
-              SERIAL_PROTOCOLLN("");
-            #endif
-            codenum = millis();
+              codenum = millis();
           }
           manage_heater();
           manage_inactivity();
           lcd_update();
-        #ifdef TEMP_RESIDENCY_TIME
-            /* start/restart the TEMP_RESIDENCY_TIME timer whenever we reach target temp for the first time
-              or when current temp falls outside the hysteresis after target temp was reached */
-          if ((residencyStart == -1 &&  target_direction && (degHotend(tmp_extruder) >= (degTargetHotend(tmp_extruder)-TEMP_WINDOW))) ||
-              (residencyStart == -1 && !target_direction && (degHotend(tmp_extruder) <= (degTargetHotend(tmp_extruder)+TEMP_WINDOW))) ||
-              (residencyStart > -1 && labs(degHotend(tmp_extruder) - degTargetHotend(tmp_extruder)) > TEMP_HYSTERESIS) )
-          {
-            residencyStart = millis();
+          /* start/restart the TEMP_RESIDENCY_TIME timer whenever we reach target temp for the first time
+             or when current temp falls outside the hysteresis after target temp was reached */
+          bool const in_window = labs(degHotend(tmp_extruder) - degTargetHotend(tmp_extruder)) > TEMP_HYSTERESIS;
+          if (residencyStart == -1 && in_window) {
+              residencyStart = millis();
+          } else if (residencyStart > -1 && !in_window) {
+              residencyStart = -1;
           }
-        #endif //TEMP_RESIDENCY_TIME
-        }
-        LCD_MESSAGEPGM(MSG_HEATING_COMPLETE);
-        starttime=millis();
-        previous_millis_cmd = millis();
+      }
+      LCD_MESSAGEPGM(MSG_HEATING_COMPLETE);
+      starttime=millis();
+      previous_millis_cmd = millis();
       }
       break;
     case 190: // M190 - Wait for bed heater to reach target.
-    #if defined(TEMP_BED_PIN) && TEMP_BED_PIN > -1
-        LCD_MESSAGEPGM(MSG_BED_HEATING);
-        if (code_seen('S')) {
-          setTargetBed(code_value());
-          CooldownNoWait = true;
-        } else if (code_seen('R')) {
-          setTargetBed(code_value());
-          CooldownNoWait = false;
-        }
-        codenum = millis();
-
-        target_direction = isHeatingBed(); // true if heating, false if cooling
-
-        while ( target_direction ? (isHeatingBed()) : (isCoolingBed()&&(CooldownNoWait==false)) )
-        {
-          if(( millis() - codenum) > 1000 ) //Print Temp Reading every 1 second while heating up.
-          {
-            float tt=degHotend(active_extruder);
-            SERIAL_PROTOCOLPGM("T:");
-            SERIAL_PROTOCOL(tt);
-            SERIAL_PROTOCOLPGM(" E:");
-            SERIAL_PROTOCOL((int)active_extruder);
-            SERIAL_PROTOCOLPGM(" B:");
-            SERIAL_PROTOCOL_F(degBed(),1);
-            SERIAL_PROTOCOLLN("");
-            codenum = millis();
+#if defined(TEMP_BED_PIN) && TEMP_BED_PIN > -1
+      {
+          LCD_MESSAGEPGM(MSG_BED_HEATING);
+          if (code_seen('S')) {
+              setTargetBed(code_value());
+              CooldownNoWait = true;
+          } else if (code_seen('R')) {
+              setTargetBed(code_value());
+              CooldownNoWait = false;
           }
-          manage_heater();
-          manage_inactivity();
-          lcd_update();
-        }
-        LCD_MESSAGEPGM(MSG_BED_DONE);
-        previous_millis_cmd = millis();
-    #endif
-        break;
+          codenum = millis();
+
+          long residencyStart;
+          residencyStart = -1;
+          /* continue to loop until we have reached the target temp
+             _and_ until TEMP_RESIDENCY_TIME hasn't passed since we reached it */
+          while((residencyStart == -1) ||
+                  (residencyStart >= 0 &&
+                   (((unsigned int) (millis() - residencyStart)) < (TEMP_RESIDENCY_TIME * 1000UL))) ) {
+              if( (millis() - codenum) > 1000UL ) {
+                  //Print Temp Reading and remaining time every 1 second while heating up/cooling down
+                  float tt=degHotend(active_extruder);
+                  SERIAL_PROTOCOLPGM("T:");
+                  SERIAL_PROTOCOL(tt);
+                  SERIAL_PROTOCOLPGM(" E:");
+                  SERIAL_PROTOCOL((int)active_extruder);
+                  SERIAL_PROTOCOLPGM(" B:");
+                  SERIAL_PROTOCOL_F(degBed(),1);
+                  SERIAL_PROTOCOLPGM(" W:");
+                  if(residencyStart > -1) {
+                      codenum = ((TEMP_RESIDENCY_TIME * 1000UL) - (millis() - residencyStart)) / 1000UL;
+                      SERIAL_PROTOCOL( codenum );
+                  } else {
+                      SERIAL_PROTOCOL( "?" );
+                  }
+                  SERIAL_PROTOCOLLN("");
+                  codenum = millis();
+              }
+              manage_heater();
+              manage_inactivity();
+              lcd_update();
+              /* start/restart the TEMP_RESIDENCY_TIME timer whenever we reach target temp for the first time
+                 or when current temp falls outside the hysteresis after target temp was reached */
+              bool const in_window = labs(degBed() - degTargetBed()) > TEMP_HYSTERESIS;
+              if (residencyStart == -1 && in_window) {
+                  residencyStart = millis();
+              } else if (residencyStart > -1 && !in_window) {
+                  residencyStart = -1;
+              }
+          }
+          LCD_MESSAGEPGM(MSG_BED_DONE);
+          previous_millis_cmd = millis();
+      }
+#endif
+      break;
 
     #if defined(FAN_PIN) && FAN_PIN > -1
       case 106: //M106 Fan On
