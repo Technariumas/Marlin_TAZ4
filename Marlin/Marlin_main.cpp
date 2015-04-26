@@ -1929,10 +1929,10 @@ void process_commands()
           lcd_update();
           /* start/restart the TEMP_RESIDENCY_TIME timer whenever we reach target temp for the first time
              or when current temp falls outside the hysteresis after target temp was reached */
-          bool const in_window = labs(degHotend(tmp_extruder) - degTargetHotend(tmp_extruder)) > TEMP_HYSTERESIS;
-          if (residencyStart == -1 && in_window) {
+          bool const in_window = labs(degHotend(tmp_extruder) - degTargetHotend(tmp_extruder)) <= TEMP_HYSTERESIS;
+          if ((residencyStart == -1) && in_window) {
               residencyStart = millis();
-          } else if (residencyStart > -1 && !in_window) {
+          } else if ((residencyStart > -1) && !in_window) {
               residencyStart = -1;
           }
       }
@@ -1985,10 +1985,10 @@ void process_commands()
               lcd_update();
               /* start/restart the TEMP_RESIDENCY_TIME timer whenever we reach target temp for the first time
                  or when current temp falls outside the hysteresis after target temp was reached */
-              bool const in_window = labs(degBed() - degTargetBed()) > TEMP_HYSTERESIS;
-              if (residencyStart == -1 && in_window) {
+              bool const in_window = labs(degBed() - degTargetBed()) <= TEMP_HYSTERESIS;
+              if ((residencyStart == -1) && in_window) {
                   residencyStart = millis();
-              } else if (residencyStart > -1 && !in_window) {
+              } else if ((residencyStart > -1) && !in_window) {
                   residencyStart = -1;
               }
           }
