@@ -435,6 +435,7 @@ static void lcd_prepare_menu()
       MENU_ITEM(function, MSG_AUTOSTART, lcd_autostart_sd);
     #endif
 #endif
+    MENU_ITEM(submenu, MSG_MOVE_AXIS, lcd_move_menu);
     MENU_ITEM(gcode, MSG_DISABLE_STEPPERS, PSTR("M84"));
     MENU_ITEM(gcode, MSG_AUTO_HOME, PSTR("G28"));
     //MENU_ITEM(gcode, MSG_SET_ORIGIN, PSTR("G92 X0 Y0 Z0"));
@@ -449,7 +450,6 @@ static void lcd_prepare_menu()
 //        MENU_ITEM(gcode, MSG_SWITCH_PS_ON, PSTR("M80"));
 //    }
 //#endif
-    MENU_ITEM(submenu, MSG_MOVE_AXIS, lcd_move_menu);
     END_MENU();
 }
 
