@@ -176,7 +176,7 @@
 // Autotuned
     #define  DEFAULT_Kp 5.13
     #define  DEFAULT_Ki .29
-    #define  DEFAULT_Kd 22.88
+    #define  DEFAULT_Kd 25
 
 // If you are using a preconfigured hotend then you can use one of the value sets by uncommenting it
 // Buda 2.0 on 24V
