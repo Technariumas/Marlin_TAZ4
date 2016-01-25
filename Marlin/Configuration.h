@@ -120,7 +120,7 @@
 // 52 is 200k thermistor - ATC Semitec 204GT-2 (1k pullup)
 // 55 is 100k thermistor - ATC Semitec 104GT-2 (Used in ParCan & J-Head) (1k pullup)
 
-#define TEMP_SENSOR_0 7
+#define TEMP_SENSOR_0 1
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_BED 7
@@ -144,7 +144,7 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 250
+#define HEATER_0_MAXTEMP 310
 #define HEATER_1_MAXTEMP 250
 #define HEATER_2_MAXTEMP 250
 #define BED_MAXTEMP 150
@@ -174,9 +174,9 @@
 
 
 // Autotuned
-    #define  DEFAULT_Kp 5.13
-    #define  DEFAULT_Ki .29
-    #define  DEFAULT_Kd 25
+    #define  DEFAULT_Kp 5.61
+    #define  DEFAULT_Ki .44
+    #define  DEFAULT_Kd 17.88
 
 // If you are using a preconfigured hotend then you can use one of the value sets by uncommenting it
 // Buda 2.0 on 24V
@@ -223,7 +223,7 @@
 // all forms of bed control obey this (PID, bang-bang, bang-bang with hysteresis)
 // setting this to anything other than 255 enables a form of PWM to the bed just like HEATER_BED_DUTY_CYCLE_DIVIDER did,
 // so you shouldn't use it unless you are OK with PWM on your bed.  (see the comment on enabling PIDTEMPBED)
-#define MAX_BED_POWER 206 // limits duty cycle to bed; 255=full current
+#define MAX_BED_POWER 255 // limits duty cycle to bed; 255=full current
 
 #ifdef PIDTEMPBED
 
